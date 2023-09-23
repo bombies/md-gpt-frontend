@@ -10,11 +10,26 @@ const config: Config = {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
+    screens: {
+      desktop: {'max': '1920px'},
+      'laptop-big': {'max': '1440px'},
+      laptop: {'max': '1280px'},
+      tablet: {'max': '1025px'},
+      phone: {'max': '615px'},
+      'laptop-min': {'min': '1280px'},
+      'tablet-min': {'min': '1025px'},
+      'phone-min': {'min': '615px'},
+    },
     extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      colors: {
+        "dark": "#100f10",
+        "dark-2": "#1b1b1b",
+        "dark-3": "#242424",
+        primary: "#a24fff",
+        secondary: "#811eff",
+        danger: "#ff2c2c",
+        warning: "#ffa700",
+        "secondary-text": "rgb(115,115,115)"
       },
     },
   },

@@ -1,5 +1,5 @@
 import NextAuth, {DefaultSession} from "next-auth";
-import authService from "@/app/api/auth/[...nextauth]/service";
+import authService from "@/app/api/auth/service";
 
 const handler = NextAuth(authService.authOptions);
 

@@ -3,6 +3,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import {compare} from "bcrypt";
 import {AuthOptions} from "next-auth";
 import prisma from "@/app/libs/prisma";
+import {RegisterUserDto, registerUserDtoSchema} from "@/app/api/auth/types";
+import {Either, respond} from "@/app/api/utils";
+import {User} from "@prisma/client";
+import {NextResponse} from "next/server";
+import bcrypt from 'bcrypt';
 
 class AuthService {
     public authOptions: AuthOptions = {
@@ -26,12 +31,18 @@ class AuthService {
                             ]
                         }
                     }))[0];
+                    console.log(fetchedUser, credentials.email)
+
                     if (!fetchedUser) throw new Error("Invalid credentials!");
 
                     const result = await compare(credentials.password, fetchedUser.password);
-                    const {username, firstName, lastName, id, ...user} = fetchedUser;
                     if (result)
-                        return {username, firstName, lastName, id};
+                        return {
+                            username: fetchedUser.username,
+                            firstName: fetchedUser.firstName,
+                            lastName: fetchedUser.lastName,
+                            id: fetchedUser.id
+                        };
                     else throw new Error("Invalid credentials!");
                 }
             })
@@ -60,6 +71,48 @@ class AuthService {
         },
         debug: process.env.NODE_ENV === "development",
         secret: process.env.NEXTAUTH_SECRET
+    }
+
+    public async registerUser(dto: RegisterUserDto): Promise<Either<User, NextResponse>> {
+        const dtoValidated = registerUserDtoSchema.safeParse(dto)
+        if (!dtoValidated.success)
+            return new Either<User, NextResponse>(undefined, respond({
+                message: "Invalid body!",
+                validationErrors: dtoValidated,
+                status: 400
+            }))
+
+        const existingUser = await prisma.user.findMany({
+            where: {
+                OR: [
+                    {username: dto.username.toLowerCase()},
+                    {email: dto.email.toLowerCase()}
+                ]
+            }
+        })
+
+        if (existingUser.length)
+            return new Either<User, NextResponse>(undefined, respond({
+                message: "There is already a user with that email or username!",
+                status: 400
+            }))
+
+        const salt = await bcrypt.genSalt(12)
+        const hashedPassword = await bcrypt.hash(dto.password, salt)
+        const createdUser = await prisma.user.create({
+            data: {
+                firstName: dto.firstName.toLowerCase(),
+                lastName: dto.lastName.toLowerCase(),
+                username: dto.username.toLowerCase(),
+                email: dto.email.toLowerCase(),
+                password: hashedPassword
+            }
+        })
+        return new Either<User, NextResponse>(createdUser)
+    }
+
+    public loginUser() {
+
     }
 }
 

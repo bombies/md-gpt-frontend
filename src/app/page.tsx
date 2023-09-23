@@ -1,7 +1,12 @@
 export default function Home() {
     return (
         <main>
-            hello world
+            <section>
+
+            </section>
+            <section id="about">
+                
+            </section>
         </main>
     )
 }
