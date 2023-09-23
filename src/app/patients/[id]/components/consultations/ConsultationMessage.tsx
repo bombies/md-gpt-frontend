@@ -8,11 +8,13 @@ const ConsultationMessage: FC<Props> = ({role, content}) => {
     return (
         <div className={clsx("flex w-full", role === "user" && "justify-end")}>
             <div className={clsx(
-                "flex w-fit max-w-[55%]",
+                "flex w-fit max-w-[55%] whitespace-pre-wrap",
                 role === "user" && "justify-end !bg-primary/50",
                 "rounded-xl bg-neutral-200 p-4"
             )}>
-                {content}
+                <p className="break-words">
+                    {content}
+                </p>
             </div>
         </div>
 
