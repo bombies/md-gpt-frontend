@@ -2,6 +2,7 @@ import {getServerSession, Session} from "next-auth";
 import authService from "@/app/api/auth/service";
 import {NextResponse} from "next/server";
 import {z} from "zod";
+import axios from "axios";
 
 export class Either<S, E> {
     constructor(readonly success?: S, readonly error?: E) {
@@ -39,4 +40,13 @@ export const respond = ({data, message, validationErrors, ...init}: {
     } : data) || {
         message
     }, init);
+}
+
+export async function fetcher<T>(url: string): Promise<T | undefined> {
+    try {
+        return (await axios.get(url)).data;
+    } catch (e) {
+        // console.error(e);
+        throw e;
+    }
 }
