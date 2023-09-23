@@ -29,7 +29,7 @@ model Patient {
   firstName String
   lastName  String
 
-  doctorId String
+  doctorId String @db.ObjectId
   doctor   User   @relation(references: [id], fields: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
@@ -41,8 +41,8 @@ model Patient {
 model PatientConsultation {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  patietId String
-  patient  Patient @relation(references: [id], fields: [id], onDelete: Cascade)
+  patientId String  @db.ObjectId
+  patient   Patient @relation(references: [id], fields: [patientId], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -53,13 +53,12 @@ model PatientConsultation {
 model ConsultationMessage {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  consultationId String
-  consultation   PatientConsultation @relation(fields: [patientConsultationId], references: [id])
+  consultationId String              @db.ObjectId
+  consultation   PatientConsultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
 
   role    String
   content String
 
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  patientConsultationId String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

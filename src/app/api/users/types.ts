@@ -1,5 +1,6 @@
 import {z} from "zod";
 import {ConsultationMessage, Patient, PatientConsultation} from "@prisma/client";
+import {Message} from "@/app/patients/[id]/components/consultations/ConsultationChat";
 
 export type AddPatientDto = {
     firstName: string,
@@ -12,6 +13,10 @@ export type PatientWithConsultations = Patient & {
 
 export type PatientConsultationWithMessages = PatientConsultation & {
     messages: ConsultationMessage[]
+}
+
+export type CreateConsultationDto = {
+    messages: Message[]
 }
 
 export const addPatientDtoSchema = z.object({

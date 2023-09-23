@@ -6,7 +6,6 @@ import {useRouter} from "next/navigation";
 import BackIcon from "@/app/components/icons/BackIcon";
 import useSWR from "swr";
 import {fetcher} from "@/app/patients/components/PatientsGrid";
-import {Patient} from "@prisma/client";
 import {Spacer} from "@nextui-org/react";
 import {Spinner} from "@nextui-org/spinner";
 import {PatientWithConsultations} from "@/app/api/users/types";
@@ -32,7 +31,7 @@ const SpecificPatientContext: FC<Props> = ({patientId}) => {
                 onClick={() => router.push("/patients")}
             >
                 <BackIcon/>
-                View All Products
+                View All Patients
             </div>
             <Spacer y={6}/>
             {
@@ -42,7 +41,11 @@ const SpecificPatientContext: FC<Props> = ({patientId}) => {
                     <Fragment>
                         <h3 className="text-3xl font-semibold">{patient?.firstName} {patient?.lastName}</h3>
                         <Spacer y={12}/>
-                        <PatientConsultationGrid consultations={patient?.consultations ?? []}/>
+                        <PatientConsultationGrid
+                            consultations={patient?.consultations ?? []}
+                            doctorId={session!.user!.id}
+                            patientId={patientId}
+                        />
                     </Fragment>
             }
         </div>

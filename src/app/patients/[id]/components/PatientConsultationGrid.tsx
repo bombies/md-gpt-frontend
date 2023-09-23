@@ -8,14 +8,18 @@ import NewConsultationButton from "@/app/patients/[id]/components/consultations/
 import {Spacer} from "@nextui-org/react";
 
 type Props = {
-    consultations: PatientConsultationWithMessages[]
+    consultations: PatientConsultationWithMessages[],
+    doctorId: string,
+    patientId: string,
 }
 
-const PatientConsultationGrid: FC<Props> = ({consultations}) => {
+const PatientConsultationGrid: FC<Props> = ({consultations, doctorId, patientId}) => {
     const cards = useMemo(() => consultations.map(consultation => (
         <PatientConsultationCard
             key={consultation.id}
             consultation={consultation}
+            doctorId={doctorId}
+            patientId={patientId}
         />
     )), [consultations])
 
@@ -23,9 +27,12 @@ const PatientConsultationGrid: FC<Props> = ({consultations}) => {
         <Fragment>
             <div className="flex gap-4">
                 <h3 className="text-2xl font-semibold self-center">Consultations</h3>
-                <NewConsultationButton/>
+                <NewConsultationButton
+                    doctorId={doctorId}
+                    patientId={patientId}
+                />
             </div>
-            <Spacer y={6} />
+            <Spacer y={6}/>
             {consultations.length ?
                 <div className="grid grid-cols-3 tablet:grid-cols-1">
                     {cards}

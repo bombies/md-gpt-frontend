@@ -1,8 +1,13 @@
 import prisma from "@/app/libs/prisma";
-import {AddPatientDto, addPatientDtoSchema, PatientWithConsultations} from "@/app/api/users/types";
+import {
+    AddPatientDto,
+    addPatientDtoSchema,
+    PatientWithConsultations
+} from "@/app/api/users/types";
 import {Either, respond} from "@/app/api/utils";
-import {Patient} from "@prisma/client";
+import {Patient, PatientConsultation} from "@prisma/client";
 import {NextResponse} from "next/server";
+import {Message} from "@/app/patients/[id]/components/consultations/ConsultationChat";
 
 class UserService {
 
@@ -65,6 +70,37 @@ class UserService {
         })
 
         return new Either<Patient, NextResponse>(createdPatient)
+    }
+
+    public async fetchConsultations(patientId: string) {
+        return prisma.patientConsultation.findMany({
+            where: {patientId},
+            include: {
+                messages: true
+            }
+        })
+    }
+
+    public async createConsultation(patientId: string, messages: Message[]): Promise<Either<PatientConsultation, NextResponse>> {
+        const patient = await this.fetchPatient(patientId)
+        if (patient.error)
+            return new Either<PatientConsultation, NextResponse>(undefined, patient.error)
+
+        const consultation = await prisma.patientConsultation.create({
+            data: {patientId,}
+        })
+
+        await prisma.$transaction(
+            messages.map(message => prisma.consultationMessage.create({
+                data: {
+                    content: message.content,
+                    role: message.role,
+                    consultationId: consultation.id,
+                }
+            }))
+        )
+
+        return new Either<PatientConsultation, NextResponse>(consultation)
     }
 }
 

@@ -4,7 +4,12 @@ import {FC, Fragment, useState} from "react";
 import {Button} from "@nextui-org/react";
 import NewConsultationModal from "@/app/patients/[id]/components/consultations/NewConsultationModal";
 
-const NewConsultationButton: FC = () => {
+type Props = {
+    doctorId: string,
+    patientId: string,
+}
+
+const NewConsultationButton: FC<Props> = ({doctorId, patientId}) => {
     const [modal, setModalOpen] = useState(false)
 
     return (
@@ -12,6 +17,8 @@ const NewConsultationButton: FC = () => {
             <NewConsultationModal
                 modalOpen={modal}
                 setModalOpen={setModalOpen}
+                doctorId={doctorId}
+                patientId={patientId}
             />
             <Button
                 variant="light"

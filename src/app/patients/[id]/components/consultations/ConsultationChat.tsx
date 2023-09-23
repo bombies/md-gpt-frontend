@@ -1,6 +1,6 @@
 "use client"
 
-import {FC, Fragment, useCallback, useMemo, useState} from "react";
+import {Dispatch, FC, Fragment, SetStateAction, useCallback, useMemo, useState} from "react";
 import GenericInput from "@/app/components/input/GenericInput";
 import {FieldValues, SubmitHandler, useForm} from "react-hook-form";
 import {Button, ScrollShadow, Spacer} from "@nextui-org/react";
@@ -27,11 +27,13 @@ const FetchResponse = () => {
     return useSWRMutation('/api/prompt', mutator)
 }
 
-const ConsultationChat: FC = () => {
-    const [messages, setMessages] = useState<Message[]>([{
-        role: "system",
-        content: "Hey there! I'm here to help you properly diagnose patients 😀. Any observations you've made please tell them mto me, as well as any additional details."
-    }])
+type Props = {
+    messages: Message[],
+    setMessages: Dispatch<SetStateAction<Message[]>>
+}
+
+const ConsultationChat: FC<Props> = ({messages, setMessages}) => {
+
     const {register, handleSubmit, reset} = useForm()
     const {trigger: respond, isMutating: isResponding} = FetchResponse()
 
@@ -40,7 +42,7 @@ const ConsultationChat: FC = () => {
             ...prev,
             message
         ])
-    }, [])
+    }, [setMessages])
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         const message: Message = {
@@ -53,7 +55,7 @@ const ConsultationChat: FC = () => {
 
         respond({
             dto: {
-                messages: [],
+                messages,
                 prompt: data.consultation_chat
             }
         })
