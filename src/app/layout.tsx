@@ -9,25 +9,25 @@ import NavBar from "@/app/components/NavBar";
 const inter = Inter({subsets: ['latin']})
 
 export const metadata: Metadata = {
-    title: 'MD-GPT',
-    description: 'A web based diagnosis assistant.',
+  title: 'MD-GPT',
+  description: 'A web based diagnosis assistant.',
 }
 
 export default async function RootLayout({
-                                             children,
+                                           children,
                                          }: {
-    children: React.ReactNode
+  children: React.ReactNode
 }) {
-    const session = await getServerSession(authService.authOptions);
+  const session = await getServerSession(authService.authOptions);
 
-    return (
-        <html lang="en">
-        <body className={inter.className}>
-        <Providers session={session}>
-            <NavBar />
-            {children}
-        </Providers>
-        </body>
-        </html>
-    )
+  return (
+      <html lang="en">
+      <body className={inter.className}>
+      <Providers session={session}>
+        <NavBar />
+        {children}
+      </Providers>
+      </body>
+      </html>
+  )
 }

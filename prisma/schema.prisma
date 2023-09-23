@@ -34,4 +34,32 @@ model Patient {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  consultations PatientConsultation[]
+}
+
+model PatientConsultation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  patietId String
+  patient  Patient @relation(references: [id], fields: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages ConsultationMessage[]
+}
+
+model ConsultationMessage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  consultationId String
+  consultation   PatientConsultation @relation(fields: [patientConsultationId], references: [id])
+
+  role    String
+  content String
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  patientConsultationId String   @db.ObjectId
 }

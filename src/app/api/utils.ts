@@ -41,12 +41,3 @@ export const respond = ({data, message, validationErrors, ...init}: {
         message
     }, init);
 }
-
-export async function fetcher<T>(url: string): Promise<T | undefined> {
-    try {
-        return (await axios.get(url)).data;
-    } catch (e) {
-        // console.error(e);
-        throw e;
-    }
-}

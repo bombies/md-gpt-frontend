@@ -21,7 +21,7 @@ export default function GenericInput({id, register, errors, radius, type, ...pro
     const className: SlotsToClasses<"description" | "errorMessage" | "label" | "base" | "mainWrapper" | "inputWrapper" | "innerWrapper" | "input" | "clearButton" | "helperWrapper"> | undefined
         = {
         inputWrapper: clsx(
-            "transition-fast ring-2 !default-container !h-fit py-6 pr-3 pl-6 ring-neutral-800 hover:ring-primary hover:-translate-y-[0.15rem]",
+            "transition-fast ring-1 !default-container !h-fit py-6 pr-3 pl-6 ring-neutral-200 hover:ring-primary hover:-translate-y-[0.15rem]",
             "group-data-[focused=true]:ring-primary",
             errors && (errors[id] && "ring-danger")
         ),

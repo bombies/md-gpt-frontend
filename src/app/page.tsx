@@ -5,7 +5,7 @@ export default function Home() {
 
             </section>
             <section id="about">
-                
+
             </section>
         </main>
     )
