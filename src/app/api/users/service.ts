@@ -1,5 +1,5 @@
 import prisma from "@/app/libs/prisma";
-import {AddPatientDto, addPatientDtoSchema} from "@/app/api/users/types";
+import {AddPatientDto, addPatientDtoSchema, PatientWithConsultations} from "@/app/api/users/types";
 import {Either, respond} from "@/app/api/utils";
 import {Patient} from "@prisma/client";
 import {NextResponse} from "next/server";
@@ -14,10 +14,17 @@ class UserService {
         });
     }
 
-    public async fetchPatient(patientId: string): Promise<Either<Patient, NextResponse>> {
+    public async fetchPatient(patientId: string): Promise<Either<PatientWithConsultations, NextResponse>> {
         const patient = await prisma.patient.findUnique({
             where: {
                 id: patientId
+            },
+            include: {
+                consultations: {
+                    include: {
+                        messages: true
+                    }
+                }
             }
         })
 
