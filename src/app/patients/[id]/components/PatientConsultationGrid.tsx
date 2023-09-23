@@ -34,7 +34,7 @@ const PatientConsultationGrid: FC<Props> = ({consultations, doctorId, patientId}
             </div>
             <Spacer y={6}/>
             {consultations.length ?
-                <div className="grid grid-cols-3 tablet:grid-cols-1">
+                <div className="grid grid-cols-3 tablet:grid-cols-1 gap-4">
                     {cards}
                 </div>
                 :
